@@ -19,8 +19,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - uses: android-actions/setup-android@v3
-
+      # ubuntu-latest already has the Android SDK (ANDROID_HOME).
       - name: Build the AARs
         working-directory: android_plugin
         run: ./gradlew --no-daemon copyToAddon
