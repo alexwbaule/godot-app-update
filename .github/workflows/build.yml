@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  android-plugin:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Build the AARs
+        working-directory: android_plugin
+        run: ./gradlew --no-daemon copyToAddon
+
+      - name: Package the addon
+        run: |
+          mkdir -p dist
+          zip -r dist/godot-app-update-${GITHUB_REF_NAME//\//-}.zip addons/app_update README.md LICENSE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: godot-app-update
+          path: dist/*.zip
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

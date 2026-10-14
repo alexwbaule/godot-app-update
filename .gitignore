@@ -1,0 +1,12 @@
+# Godot
+.godot/
+/android/
+/build/
+*.tmp
+
+# Android plugin (Gradle)
+android_plugin/.gradle/
+android_plugin/build/
+android_plugin/plugin/build/
+android_plugin/local.properties
+.kotlin/
